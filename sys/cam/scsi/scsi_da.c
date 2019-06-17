@@ -2691,6 +2691,7 @@ daregister(struct cam_periph *periph, void *arg)
 	struct ccb_getdev *cgd;
 	char tmpstr[80];
 	caddr_t match;
+	int quirks;
 
 	cgd = (struct ccb_getdev *)arg;
 	if (cgd == NULL) {
@@ -2800,6 +2801,11 @@ daregister(struct cam_periph *periph, void *arg)
 	snprintf(tmpstr, sizeof(tmpstr), "kern.cam.da.%d.minimum_cmd_size",
 		 periph->unit_number);
 	TUNABLE_INT_FETCH(tmpstr, &softc->minimum_cmd_size);
+	snprintf(tmpstr, sizeof(tmpstr), "kern.cam.da.%d.quirks",
+		 periph->unit_number);
+	quirks = softc->quirks;
+	TUNABLE_INT_FETCH(tmpstr, &quirks);
+	softc->quirks = quirks;
 
 	/*
 	 * 6, 10, 12 and 16 are the currently permissible values.
